@@ -44,6 +44,14 @@ const userSchema = new mongoose.Schema({
   },
   interests: [],
   followers: [],
+  linkedin: String,
+  facebook: String,
+  instagram: String,
+  twitter: String,
+  website: String,
+  github: String,
+  education: String,
+  college: String,
 });
 
 //Model
@@ -51,107 +59,86 @@ const User = mongoose.model('User', userSchema);
 
 // app.use(express.static(path.resolve(__dirname, '../client/build')));
 
-// app.get('/api', (req, res) => {
-//   Video.find({}, function (err, foundVideos) {
-//     if (foundVideos) {
-//       res.send(foundVideos);
-//       //   console.log(foundVideos);
-//     } else console.log(err);
-//   });
-// });
+app.post('/web-info', (req, res) => {
+  const data = req.body[0];
+  const userId = data.userId;
+  const linkedin = data.linkedin;
+  const facebook = data.facebook;
+  const github = data.github;
+  const instagram = data.instagram;
+  const twitter = data.twitter;
+  const website = data.website;
 
-// app.post('/new-video', (req, res) => {
-//   const data = req.body[0];
-//   const videoTitle = data.videoTitle;
-//   const videoUrl = data.videoUrl;
-//   const userId = data.userId;
-//   // console.log(userName);
+  // console.log(data);
 
-//   const newVideo = new Video({
-//     title: videoTitle,
-//     videoUrl: videoUrl,
-//   });
+  User.findOne({ _id: userId }, (err, foundUser) => {
+    User.findOneAndUpdate(
+      { _id: foundUser._id },
+      {
+        linkedin: linkedin,
+        facebook: facebook,
+        instagram: instagram,
+        github: github,
+        twitter: twitter,
+        website: website,
+      },
+      { returnOriginal: false },
+      (err, updatedUser) => {
+        !err
+          ? res.send(JSON.stringify(updatedUser)) && console.log('done')
+          : res.send('poop') && console.log(err);
+      }
+    );
+  });
+});
 
-//   newVideo.save((err) =>
-//     !err
-//       ? User.findOne({ _id: userId }, (err, foundUser) => {
-//           !err &&
-//             User.findOneAndUpdate(
-//               { _id: foundUser._id },
-//               { uploadedVideos: [...foundUser.uploadedVideos, newVideo] },
-//               { returnOriginal: false },
-//               (err, updatedUser) => {
-//                 !err
-//                   ? res.send(JSON.stringify(updatedUser)) &&
-//                     console.log('updated')
-//                   : res.send('poop') && console.log(err);
-//               }
-//             );
-//         })
-//       : console.log(err)
-//   );
-// });
+app.post('/personal-info', (req, res) => {
+  const data = req.body[0];
+  const userId = data.userId;
+  const education = data.education;
+  const college = data.college;
 
-// app.post('/like', (req, res) => {
-//   const data = req.body[0];
-//   const videoId = data.videoId;
-//   const userId = data.userId;
-//   // console.log(data);
+  // console.log(data);
 
-//   Video.findOne({ _id: videoId }, (err, foundVideo) => {
-//     User.findOne(
-//       { _id: userId, likedVideos: { $in: [foundVideo] } },
-//       (err, foundUser) => {
-//         foundUser
-//           ? User.findOneAndUpdate(
-//               { _id: foundUser._id },
-//               { $pull: { likedVideos: { _id: videoId } } },
-//               { returnOriginal: false },
-//               (err, updatedUser) => {
-//                 !err
-//                   ? res.send(JSON.stringify(updatedUser)) &&
-//                     console.log('removed from likes')
-//                   : res.send('poop') && console.log(err);
-//               }
-//             )
-//           : User.findOne({ _id: userId }, (err, foundUser) => {
-//               User.findOneAndUpdate(
-//                 { _id: foundUser._id },
-//                 { likedVideos: [...foundUser.likedVideos, foundVideo] },
-//                 { returnOriginal: false },
-//                 (err, updatedUser) => {
-//                   !err
-//                     ? res.send(JSON.stringify(updatedUser)) &&
-//                       console.log('done')
-//                     : res.send('poop') && console.log(err);
-//                 }
-//               );
-//             });
-//       }
-//     );
-//   });
-// });
+  User.findOne({ _id: userId }, (err, foundUser) => {
+    User.findOneAndUpdate(
+      { _id: foundUser._id },
+      {
+        education: education,
+        college: college,
+      },
+      { returnOriginal: false },
+      (err, updatedUser) => {
+        !err
+          ? res.send(JSON.stringify(updatedUser)) && console.log('done')
+          : res.send('poop') && console.log(err);
+      }
+    );
+  });
+});
 
-// app.post('/comment', (req, res) => {
-//   const data = req.body[0];
-//   const videoId = data.videoId;
-//   const newComment = data.newComment;
-//   const userId = data.userId;
-//   // console.log(data);
+app.post('/new-password', (req, res) => {
+  const data = req.body[0];
+  const userId = data.userId;
+  const newPassword = data.password;
 
-//   Video.findOne({ _id: videoId }, (err, foundVideo) => {
-//     Video.findOneAndUpdate(
-//       { _id: foundVideo._id },
-//       { comments: [...foundVideo.comments, newComment] },
-//       { returnOriginal: false },
-//       (err, updatedVideo) => {
-//         !err
-//           ? res.send(JSON.stringify(updatedVideo)) && console.log('done')
-//           : res.send('poop') && console.log(err);
-//       }
-//     );
-//   });
-// });
+  // console.log(data);
+
+  User.findOne({ _id: userId }, (err, foundUser) => {
+    User.findOneAndUpdate(
+      { _id: foundUser._id },
+      {
+        password: newPassword,
+      },
+      { returnOriginal: false },
+      (err, updatedUser) => {
+        !err
+          ? res.send(JSON.stringify(updatedUser)) && console.log('done')
+          : res.send('poop') && console.log(err);
+      }
+    );
+  });
+});
 
 app.post('/login', (req, res) => {
   const data = req.body[0];
