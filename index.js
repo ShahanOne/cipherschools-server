@@ -24,7 +24,6 @@ app.use(cors(corsOptions));
 
 //Connection
 mongoose.connect(
-  //   'mongodb://localhost:27017/cipherSchoolsDB'
   `mongodb+srv://Shahan786:${process.env.MONGO_PASSWORD}@cluster0.ma0c6.mongodb.net/cipherSchoolsDB`
 );
 
