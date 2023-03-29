@@ -42,6 +42,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  about: String,
   interests: [],
   followers: [],
   linkedin: String,
@@ -92,6 +93,27 @@ app.post('/web-info', (req, res) => {
   });
 });
 
+app.post('/about', (req, res) => {
+  const data = req.body[0];
+  const userId = data.userId;
+  const newAbout = data.about;
+
+  User.findOne({ _id: userId }, (err, foundUser) => {
+    User.findOneAndUpdate(
+      { _id: foundUser._id },
+      {
+        about: newAbout,
+      },
+      { returnOriginal: false },
+      (err, updatedUser) => {
+        !err
+          ? res.send(JSON.stringify(updatedUser)) && console.log('done')
+          : res.send('poop') && console.log(err);
+      }
+    );
+  });
+});
+
 app.post('/personal-info', (req, res) => {
   const data = req.body[0];
   const userId = data.userId;
@@ -122,21 +144,21 @@ app.post('/new-password', (req, res) => {
   const userId = data.userId;
   const newPassword = data.password;
 
-  // console.log(data);
-
-  User.findOne({ _id: userId }, (err, foundUser) => {
-    User.findOneAndUpdate(
-      { _id: foundUser._id },
-      {
-        password: newPassword,
-      },
-      { returnOriginal: false },
-      (err, updatedUser) => {
-        !err
-          ? res.send(JSON.stringify(updatedUser)) && console.log('done')
-          : res.send('poop') && console.log(err);
-      }
-    );
+  bcrypt.hash(newPassword, saltRounds, function (err, hash) {
+    User.findOne({ _id: userId }, (err, foundUser) => {
+      User.findOneAndUpdate(
+        { _id: foundUser._id },
+        {
+          password: hash,
+        },
+        { returnOriginal: false },
+        (err, updatedUser) => {
+          !err
+            ? res.send(JSON.stringify(updatedUser)) && console.log('done')
+            : res.send('poop') && console.log(err);
+        }
+      );
+    });
   });
 });
 
