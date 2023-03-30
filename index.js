@@ -189,6 +189,15 @@ app.post('/register', (req, res) => {
       username: username,
       email: email,
       password: hash,
+      about: '',
+      linkedin: '',
+      facebook: '',
+      instagram: '',
+      twitter: '',
+      website: '',
+      github: '',
+      education: '',
+      college: '',
     });
 
     newUser.save((err) => {
