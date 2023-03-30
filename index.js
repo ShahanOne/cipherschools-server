@@ -41,17 +41,19 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  about: String,
+  about: {
+    type: String,
+  },
   interests: [],
   followers: [],
-  linkedin: String,
-  facebook: String,
-  instagram: String,
-  twitter: String,
-  website: String,
-  github: String,
-  education: String,
-  college: String,
+  linkedin: { type: String },
+  facebook: { type: String },
+  instagram: { type: String },
+  twitter: { type: String },
+  website: { type: String },
+  github: { type: String },
+  education: { type: String },
+  college: { type: String },
 });
 
 //Model
